@@ -149,6 +149,9 @@
   <ItemGroup>
     <ClCompile Include="airportSimulation.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="controler.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
