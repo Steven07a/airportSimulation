@@ -9,6 +9,7 @@ int main()
 {
     Queue<int>* q = new Queue<int>;
     controle c;
+
     for (int i = 0; i < 100; i++) {
         std::cout << c.query() << std::endl;
     }
