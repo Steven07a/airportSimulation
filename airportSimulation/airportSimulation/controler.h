@@ -3,9 +3,9 @@
 #include <cassert>
 #include <cstdlib>
 
-class controle {
+class control {
 public:
-	controle(double lp = .10 ,double tp = .8);
+	control(double lp = .10 ,double tp = .8);
 	bool takeoffQuery() const;
 	bool landingQuery() const;
 private:

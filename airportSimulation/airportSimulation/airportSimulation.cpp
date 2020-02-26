@@ -2,6 +2,8 @@
 //
 
 #include <iostream>
+#include <cstdlib>
+#include <time.h>
 #include "C:\Users\Steven_dev\Desktop\CS_Stuff\includes/queue.h"
 #include "controler.h"
 
@@ -13,6 +15,7 @@ void airport_simulation(unsigned int time_to_land, unsigned int time_to_takeoff,
 
 int main()
 {
+    srand(time(0));
     unsigned int time_to_land = 5, time_to_takeoff = 15, fuel_limit = 20, simulation_time = 1440;
     double landing_probability = .1, takeoff_probability = .08;
     airport_simulation(time_to_land, time_to_takeoff, landing_probability,
@@ -25,7 +28,7 @@ void airport_simulation(unsigned int time_to_land, unsigned int time_to_takeoff,
 
     Queue<int> arrival_queue, departure_queue;
     unsigned int next = 0, current_second = 0;
-    controle c;
+    control c;
     averager avg;
     takeoff takingOff;
 
@@ -38,8 +41,28 @@ void airport_simulation(unsigned int time_to_land, unsigned int time_to_takeoff,
     
     for (current_second = 1; current_second <= simulation_time; current_second++) {
         if (c.landingQuery()) {
-            arrival_queue.push(current_second);
+            if (!takingOff.is_busy()) {
+                takingOff.start_landing();
+                arrival_queue.push(current_second);
+            }
         }
+
+        //arrival queue is planes waiting to leave
+        if (!takingOff.is_busy() && (!arrival_queue.empty())) {
+            if (c.takeoffQuery()) {
+                next = arrival_queue.front();
+                avg.add_number(current_second - next);
+                takingOff.start_takeoff();
+                arrival_queue.pop();
+                departure_queue.push(next);
+            }
+        }
+        takingOff.one_second();
+    }
+
+    cout << "Customers served: " << avg.how_many_numbers() << endl;
+    if (avg.how_many_numbers() > 0) {
+        cout << "Average wait: " << avg.average() << " sec" << endl;
     }
 
 

@@ -1,20 +1,21 @@
 #include <cassert>
 #include <cstdlib>
+#include <iostream>
 #include"controler.h"
 using namespace std;
 
-controle::controle(double lp, double tp) {
+control::control(double lp, double tp) {
 	assert(lp <= 1 && tp <= 1);
 	assert(lp >= 0 && tp >= 0);
 	landing_probability = lp;
 	takeoff_probability = tp;
 }
 
-bool controle::landingQuery() const {
+bool control::landingQuery() const {
 	return (rand() < landing_probability * RAND_MAX);
 }
 
-bool controle::takeoffQuery() const {
+bool control::takeoffQuery() const {
 	return (rand() < takeoff_probability * RAND_MAX);
 }
 
@@ -36,13 +37,14 @@ double averager::average() const {
 takeoff::takeoff(unsigned int takeoff_time, unsigned int landing_time) {
 	seconds_to_land = landing_time;
 	seconds_to_takeoff = takeoff_time;
+	time_to_land = 0;
+	time_to_takeoff = 0;
 }
 void takeoff::one_second() {
-	assert(is_busy());
 	if (time_to_land > 0) {
 		time_to_land--;
 	}
-	else {
+	else if (time_to_takeoff > 0){
 		time_to_takeoff--;
 	}
 
