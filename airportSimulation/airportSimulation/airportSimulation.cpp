@@ -5,13 +5,42 @@
 #include "C:\Users\Steven_dev\Desktop\CS_Stuff\includes/queue.h"
 #include "controler.h"
 
+using namespace std;
+
+void airport_simulation(unsigned int time_to_land, unsigned int time_to_takeoff,
+    double landing_probability, double takeoff_probability, 
+    unsigned int fuel_limit, unsigned int simulation_time);
+
 int main()
 {
-    Queue<int>* q = new Queue<int>;
-    controle c;
+    unsigned int time_to_land = 5, time_to_takeoff = 15, fuel_limit = 20, simulation_time = 1440;
+    double landing_probability = .1, takeoff_probability = .08;
+    airport_simulation(time_to_land, time_to_takeoff, landing_probability,
+        takeoff_probability, fuel_limit, simulation_time);
 
-    for (int i = 0; i < 100; i++) {
-        std::cout << c.query() << std::endl;
-    }
 }
 
+void airport_simulation(unsigned int time_to_land, unsigned int time_to_takeoff,
+     double landing_probability, double takeoff_probability, unsigned int fuel_limit, unsigned int simulation_time) {
+
+    Queue<int> arrival_queue, departure_queue;
+    unsigned int next = 0, current_second = 0;
+    controle c;
+    averager avg;
+    takeoff takingOff;
+
+    cout << "time to take off\t: " << time_to_takeoff << endl;
+    cout << "time to land\t\t: " << time_to_land << endl;
+    cout << "probability of landing\t: " << landing_probability << endl;
+    cout << "probability of takeoff\t: " << takeoff_probability << endl;
+    cout << "fuel: time to crash\t: " << fuel_limit << endl;
+    cout << "total simulation time\t: " << simulation_time << endl;
+    
+    for (current_second = 1; current_second <= simulation_time; current_second++) {
+        if (c.landingQuery()) {
+            arrival_queue.push(current_second);
+        }
+    }
+
+
+}

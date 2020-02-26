@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="airportSimulation.cpp" />
+    <ClCompile Include="controler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controler.h" />
