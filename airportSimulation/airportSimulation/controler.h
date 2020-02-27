@@ -5,7 +5,7 @@
 
 class control {
 public:
-	control(double lp = .10 ,double tp = .08);
+	control(double lp = .20 ,double tp = .08);
 	bool takeoffQuery() const;
 	bool landingQuery() const;
 private:
