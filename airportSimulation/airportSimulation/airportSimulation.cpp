@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <time.h>
 #include "C:\Users\Steven_dev\Desktop\CS_Stuff\includes/queue.h"
@@ -27,11 +28,13 @@ void airport_simulation(unsigned int time_to_land, unsigned int time_to_takeoff,
      double landing_probability, double takeoff_probability, unsigned int fuel_limit, unsigned int simulation_time) {
 
     Queue<int> arrival_queue, departure_queue;
-    unsigned int next = 0, current_second = 0;
+    unsigned int next = 0, current_second = 0, landingCount = 0, depatureCount = 0, crashed = 0;
     control c;
-    averager avg;
-    takeoff takingOff;
+    averager landingAverage,departureAverage;
+    takeoff runnway;
 
+    cout << fixed;
+    cout << setprecision(2);
     cout << "time to take off\t: " << time_to_takeoff << endl;
     cout << "time to land\t\t: " << time_to_land << endl;
     cout << "probability of landing\t: " << landing_probability << endl;
@@ -41,28 +44,36 @@ void airport_simulation(unsigned int time_to_land, unsigned int time_to_takeoff,
     
     for (current_second = 1; current_second <= simulation_time; current_second++) {
         if (c.landingQuery()) {
-            if (!takingOff.is_busy()) {
-                takingOff.start_landing();
-                arrival_queue.push(current_second);
-            }
+            arrival_queue.push(current_second);
+            next = arrival_queue.front();
         }
 
+        if (!runnway.is_busy() && !arrival_queue.empty()) {
+            landingAverage.add_number(current_second - next);
+            runnway.start_landing();
+            departure_queue.push(arrival_queue.pop() + time_to_land);
+            landingCount++;
+        }
+        
         //arrival queue is planes waiting to leave
-        if (!takingOff.is_busy() && (!arrival_queue.empty())) {
+        if (!runnway.is_busy() && (!departure_queue.empty())) {
             if (c.takeoffQuery()) {
-                next = arrival_queue.front();
-                avg.add_number(current_second - next);
-                takingOff.start_takeoff();
-                arrival_queue.pop();
-                departure_queue.push(next);
+                next = departure_queue.front();
+                depatureCount++;
+                departureAverage.add_number(current_second - next);
+                runnway.start_takeoff();
+                departure_queue.pop();
             }
         }
-        takingOff.one_second();
+        runnway.one_second();
     }
 
-    cout << "Customers served: " << avg.how_many_numbers() << endl;
-    if (avg.how_many_numbers() > 0) {
-        cout << "Average wait: " << avg.average() << " sec" << endl;
+    cout << "\n\n\n" << landingCount << " landed\n";
+    cout << depatureCount << " took off" << endl;
+    if (landingAverage.how_many_numbers() > 0) {
+        cout << "Average waiting time to land: " << landingAverage.average() << " sec" << endl;
+        cout << "Average waiting time to take off: " << departureAverage.average() << " sec" << endl;
+
     }
 
 
